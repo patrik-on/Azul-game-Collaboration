@@ -2,7 +2,7 @@ package sk.uniba.fmph.dcs;
 import java.util.*;
 import java.io.*;
 
-public final class UsedTyles implements Serializable{
+public final class UsedTyles implements Serializable, UsedTilesGiveInterface, UsedTilesTakeInterface{
     private static volatile UsedTyles fINSTANCE;
     private ArrayList<Tile> tiles;
 
@@ -15,14 +15,16 @@ public final class UsedTyles implements Serializable{
         return fINSTANCE;
     }
 
-    public void give(ArrayList<Tile> tiles) {
-        this.tiles.addAll(tiles);
-    }
-
-    public ArrayList<Tile> takeAll() {
+    @Override
+    public void give(Collection<Tile> ts) {
         ArrayList<Tile> toReturn = new ArrayList(tiles);
         tiles.removeAll(tiles);
-        return toReturn;
+        this.tiles.addAll(ts);
+    }
+
+    @Override
+    public Collection<Tile> takeAll() {
+        return tiles;
     }
 
     public String state() {
