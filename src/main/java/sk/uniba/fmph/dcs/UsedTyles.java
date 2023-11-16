@@ -41,9 +41,4 @@ public final class UsedTyles implements Serializable{
     private Object readResolve() throws ObjectStreamException {
         return getInstance();
     }
-
-
-
-
-
 }
