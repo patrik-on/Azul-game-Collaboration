@@ -24,7 +24,9 @@ public final class UsedTyles implements Serializable, UsedTilesGiveInterface, Us
 
     @Override
     public Collection<Tile> takeAll() {
-        return tiles;
+        ArrayList<Tile> toReturn = new ArrayList(tiles);
+        tiles.removeAll(tiles);
+        return toReturn;
     }
 
     public String state() {
