@@ -15,11 +15,19 @@ public final class UsedTyles implements Serializable, UsedTilesGiveInterface, Us
         return fINSTANCE;
     }
 
+    private UsedTyles(){
+        tiles = new ArrayList<>();
+    }
+    
+    private Object readResolve() throws ObjectStreamException {
+        return getInstance();
+    }
+
     @Override
     public void give(Collection<Tile> ts) {
-        ArrayList<Tile> toReturn = new ArrayList(tiles);
-        tiles.removeAll(tiles);
-        this.tiles.addAll(ts);
+        for(Tile tile : ts) {
+            if (tile != Tile.STARTING_PLAYER) tiles.add(tile);
+        }
     }
 
     @Override
@@ -38,11 +46,5 @@ public final class UsedTyles implements Serializable, UsedTilesGiveInterface, Us
     }
 
 
-    private UsedTyles(){
-        tiles = new ArrayList<>();
-    }
 
-    private Object readResolve() throws ObjectStreamException {
-        return getInstance();
-    }
 }
