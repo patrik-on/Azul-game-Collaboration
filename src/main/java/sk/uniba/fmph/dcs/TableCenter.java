@@ -5,6 +5,10 @@ import java.util.ArrayList;
 public class TableCenter implements TileSource{
     private ArrayList<Tile> tiles;
 
+    public TableCenter() {
+        tiles = new ArrayList<Tile>();
+    }
+
     public void add(ArrayList<Tile> tiles) {
         this.tiles.addAll(tiles);
     }
