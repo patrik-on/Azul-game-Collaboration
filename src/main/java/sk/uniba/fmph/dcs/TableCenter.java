@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 public class TableCenter implements TileSource{
     private ArrayList<Tile> tiles;
+    private boolean isFirstPlayer;
 
     public TableCenter() {
-        tiles = new ArrayList<Tile>();
+        tiles = new ArrayList<>();
+        isFirstPlayer = true;
     }
 
     public void add(ArrayList<Tile> tiles) {
@@ -23,6 +25,10 @@ public class TableCenter implements TileSource{
                 i--;
             }
         }
+        if (isFirstPlayer) {
+            isFirstPlayer = false;
+            pickedTiles.add(tiles.remove(tiles.indexOf(Tile.STARTING_PLAYER)));
+        }
         return pickedTiles;
     }
 
@@ -33,6 +39,7 @@ public class TableCenter implements TileSource{
 
     @Override
     public void startNewRound() {
+        isFirstPlayer = true;
         tiles = new ArrayList<Tile>();
         tiles.add(Tile.STARTING_PLAYER);
     }
