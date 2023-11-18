@@ -1,14 +1,15 @@
 package sk.uniba.fmph.dcs;
-
 import java.util.ArrayList;
 
 public class TableArea {
     ArrayList<TileSource> factories;
     TableCenter tableCenter;
+    Bag bag;
 
-    public TableArea(int playerCount) {
+    public TableArea(int playerCount, Bag bag) {
+        this.bag = bag;
         for (int i = 0; i < playerCount; i++) {
-            factories.add(new Factory());
+            factories.add(new Factory(this));
         }
         tableCenter = new TableCenter();
     }
