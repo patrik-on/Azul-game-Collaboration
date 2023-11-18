@@ -1,31 +1,15 @@
 package sk.uniba.fmph.dcs;
 import java.util.*;
-import java.io.*;
 
-public final class UsedTyles implements Serializable, UsedTilesGiveInterface, UsedTilesTakeInterface{
-    private static volatile UsedTyles fINSTANCE;
+public final class UsedTyles implements UsedTilesGiveInterface, UsedTilesTakeInterface{
     private ArrayList<Tile> tiles;
-
-    public static UsedTyles getInstance(){
-        if (fINSTANCE == null) {
-            synchronized (UsedTyles.class) {
-                if (fINSTANCE == null) fINSTANCE = new UsedTyles();
-            }
-        }
-        return fINSTANCE;
-    }
-
-    private UsedTyles(){
+    public UsedTyles(){
         tiles = new ArrayList<>();
-    }
-    
-    private Object readResolve() throws ObjectStreamException {
-        return getInstance();
     }
 
     @Override
-    public void give(Collection<Tile> ts) {
-        for(Tile tile : ts) {
+    public void give(Collection<Tile> newTiles) {
+        for(Tile tile : newTiles) {
             if (tile != Tile.STARTING_PLAYER) tiles.add(tile);
         }
     }
@@ -44,7 +28,4 @@ public final class UsedTyles implements Serializable, UsedTilesGiveInterface, Us
         }
         return toReturn;
     }
-
-
-
 }
