@@ -29,7 +29,7 @@ public class WallLine {
 
     List<Optional<Tile>> getTiles(){
         ArrayList<Optional<Tile>> tiles = new ArrayList<>();
-        for (int i = 0; i < occupiedTiles.length; i++) {
+        for (int i = 0; i < tileTypes.size(); i++) {
             if(occupiedTiles[i]){
                 tiles.add(Optional.ofNullable(this.tileTypes.get(i)));
             }
@@ -42,6 +42,12 @@ public class WallLine {
     }
 
     String state(){
-        return null;
+        String toReturn = "";
+        for (int i = 0; i < tileTypes.size(); i++) {
+            if(occupiedTiles[i]){
+                toReturn += tileTypes.get(i).toString();
+            }
+        }
+        return toReturn;
     }
 }
