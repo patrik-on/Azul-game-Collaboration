@@ -32,6 +32,9 @@ public class WallLine {
         for (int i = 0; i < tileTypes.size(); i++) {
             if(occupiedTiles[i]){
                 tiles.add(Optional.ofNullable(this.tileTypes.get(i)));
+            }else{
+                Tile t = null;
+                tiles.add(Optional.ofNullable(t));
             }
         }
         return tiles;
