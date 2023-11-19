@@ -8,7 +8,9 @@ public class TableArea {
 
     public TableArea(int playerCount, Bag bag) {
         this.bag = bag;
+        factories.add(new Factory(this));
         for (int i = 0; i < playerCount; i++) {
+            factories.add(new Factory(this));
             factories.add(new Factory(this));
         }
         tableCenter = new TableCenter();
