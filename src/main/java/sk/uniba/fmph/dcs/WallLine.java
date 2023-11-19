@@ -28,7 +28,13 @@ public class WallLine {
     }
 
     List<Optional<Tile>> getTiles(){
-        return null;
+        ArrayList<Optional<Tile>> tiles = new ArrayList<>();
+        for (int i = 0; i < occupiedTiles.length; i++) {
+            if(occupiedTiles[i]){
+                tiles.add(Optional.ofNullable(this.tileTypes.get(i)));
+            }
+        }
+        return tiles;
     }
 
     Points putTile(Tile tile){
