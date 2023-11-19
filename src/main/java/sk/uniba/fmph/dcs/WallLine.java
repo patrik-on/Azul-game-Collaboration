@@ -42,8 +42,53 @@ public class WallLine {
 
     Points putTile(Tile tile) throws Exception{
         if (canPutTile(tile)){
-            this.occupiedTiles[tileTypes.indexOf(tile)] = true;
-            return null;
+            int idx = tileTypes.indexOf(tile);
+            this.occupiedTiles[idx] = true;
+
+            int points = 1;
+
+            int offset = 1;
+            while(offset+idx < tileTypes.size()){
+                if (occupiedTiles[offset+idx]) {
+                    points++;
+                    offset++;
+                }else{
+                    break;
+                }
+            } 
+            
+            offset = 1;
+            while(idx-offset <= 0){
+                if (occupiedTiles[offset+idx]) {
+                    points++;
+                    offset++;
+                }else{
+                    break;
+                }
+            } 
+            
+            WallLine current = this;
+            while (current.lineUp != null) {
+                if (!current.lineUp.getTiles().get(idx).isEmpty()){
+                    points++;
+                    current = current.lineUp;
+                }else{
+                    break;
+                }
+            }
+
+            current = this;
+            while (current.lineDown != null) {
+                if (!current.lineDown.getTiles().get(idx).isEmpty()){
+                    points++;
+                    current = current.lineUp;
+                }else{
+                    break;
+                }
+            }
+
+            return new Points(points);
+            
         }else{
             throw new Exception("The tile given is wrong!");
         }
