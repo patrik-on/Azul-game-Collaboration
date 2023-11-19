@@ -37,8 +37,13 @@ public class WallLine {
         return tiles;
     }
 
-    Points putTile(Tile tile){
-        return null;
+    Points putTile(Tile tile) throws Exception{
+        if (canPutTile(tile)){
+            this.occupiedTiles[tileTypes.indexOf(tile)] = true;
+            return null;
+        }else{
+            throw new Exception("The tile given is wrong!");
+        }
     }
 
     String state(){
