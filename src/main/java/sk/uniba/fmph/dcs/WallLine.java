@@ -12,8 +12,8 @@ public class WallLine {
     private boolean[] occupiedTiles;
 
 
-    public WallLine(ArrayList<Tile> tileTypes, WallLine lineUp, WallLine lineDown) {
-        this.tileTypes = tileTypes;
+    public WallLine(List<Tile> tileTypes, WallLine lineUp, WallLine lineDown) {
+        this.tileTypes = new ArrayList<>(tileTypes);
         this.lineUp = lineUp;
         this.lineDown = lineDown;
 
