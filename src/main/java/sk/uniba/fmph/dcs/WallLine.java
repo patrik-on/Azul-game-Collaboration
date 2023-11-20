@@ -40,7 +40,7 @@ public class WallLine {
         return tiles;
     }
 
-    Points putTile(Tile tile) throws Exception{
+    Points putTile(Tile tile){
         if (canPutTile(tile)){
             int idx = tileTypes.indexOf(tile);
             this.occupiedTiles[idx] = true;
@@ -89,9 +89,8 @@ public class WallLine {
 
             return new Points(points);
             
-        }else{
-            throw new Exception("The tile given is wrong!");
         }
+        return new Points(0);
     }
 
     String state(){
