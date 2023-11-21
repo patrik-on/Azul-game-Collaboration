@@ -58,8 +58,8 @@ public class WallLine {
             } 
             
             offset = 1;
-            while(idx-offset <= 0){
-                if (occupiedTiles[offset+idx]) {
+            while(idx-offset >= 0){
+                if (occupiedTiles[idx-offset]) {
                     points++;
                     offset++;
                 }else{
