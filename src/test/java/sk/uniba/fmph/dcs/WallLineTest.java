@@ -67,4 +67,31 @@ public class WallLineTest {
                     "according to tileTypes if every tile is occupied."
             ,full,wallLine.getTiles());
   }
+  @Test
+  public void testPutTile(){
+    Points control = new Points(0);
+    assertEquals("WallLine.putTile should return zero points for invalid tile type."
+            ,wallLine.putTile(Tile.STARTING_PLAYER),control);
+
+    control = new Points(1);
+    assertEquals("WallLine.putTile should return one point if it first tile in wall(without adjacent tiles)."
+            ,wallLine.putTile(Tile.RED),control);
+
+    control = new Points(0);
+    assertEquals("WallLine.putTile should return zero points if tile is already occupied."
+            ,wallLine.putTile(Tile.RED),control);
+
+    control = new Points(3);
+    wallLine.putTile(Tile.BLUE);
+    assertEquals("WallLine.putTile should return one point for it self and point per each adjacent tiles." +
+                    "More specifically one point for tiles linked vertically or horizontally to the placed tile" +
+                    "In these case there is two tiles linked horizontally and zero vertically, so 3 points in total."
+            ,wallLine.putTile(Tile.BLACK),control);
+
+    control = new Points(1);
+    assertEquals("WallLine.putTile should return one point for it self and point per each adjacent tiles." +
+                    "More specifically one point for tiles linked vertically or horizontally to the placed tile" +
+                    "In these case there is no tiles linked horizontally or vertically, so 1 point in total."
+            ,wallLine.putTile(Tile.YELLOW),control);
+  }
 }
