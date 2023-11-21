@@ -19,11 +19,23 @@ public class WallLineTest {
     tileTypes1.add(Tile.GREEN);
     tileTypes1.add(Tile.YELLOW);
 
-    LinkedList<Tile> tileTypes2 = new LinkedList<Tile>(tileTypes1.subList(1,4));
+    LinkedList<Tile> tileTypes2 = new LinkedList<Tile>(tileTypes1.subList(1,5));
     tileTypes2.add(Tile.RED);
 
-    WallLine anotherWallLine = new WallLine(tileTypes2,null,null);
+    System.out.println();
+    LinkedList<Tile> tileTypes3 = new LinkedList<Tile>(tileTypes2.subList(1,5));
+    tileTypes3.add(Tile.BLUE);
+
+    WallLine wallLineUp2 = new WallLine(tileTypes3,null,null);
+    WallLine wallLineUp1 = new WallLine(tileTypes2,null,null);
     wallLine =  new WallLine(tileTypes1,null,null);
+
+    wallLine.setLineUp(wallLineUp1);
+    wallLineUp1.setLineDown(wallLine);
+    wallLineUp1.setLineUp(wallLineUp2);
+    wallLineUp2.setLineDown(wallLineUp1);
+
+    wallLineUp1.putTile(Tile.YELLOW);
   }
 
   @Test
@@ -93,5 +105,11 @@ public class WallLineTest {
                     "More specifically one point for tiles linked vertically or horizontally to the placed tile" +
                     "In these case there is no tiles linked horizontally or vertically, so 1 point in total."
             ,wallLine.putTile(Tile.YELLOW),control);
+
+    control = new Points(6);
+    assertEquals("WallLine.putTile should return one point for it self and point per each adjacent tiles." +
+                    "More specifically one point for tiles linked vertically or horizontally to the placed tile" +
+                    "In these case there are 4 tiles linked horizontally and one vertically, so 6 point in total."
+            ,wallLine.putTile(Tile.GREEN),control);
   }
 }
