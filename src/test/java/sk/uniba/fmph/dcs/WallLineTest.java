@@ -112,4 +112,12 @@ public class WallLineTest {
                     "In these case there are 4 tiles linked horizontally and one vertically, so 6 point in total."
             ,wallLine.putTile(Tile.GREEN),control);
   }
+  @Test
+  public void testState(){
+    assertEquals("WallLine should be empty when created.", "", wallLine.state());
+    wallLine.putTile(Tile.BLACK);
+    wallLine.putTile(Tile.RED);
+    assertEquals("WallLine should contain tiles we put on it in correct order," +
+            " according to tileTypes.", "RL", wallLine.state());
+  }
 }
