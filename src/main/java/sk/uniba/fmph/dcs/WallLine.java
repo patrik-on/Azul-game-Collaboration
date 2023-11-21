@@ -19,6 +19,14 @@ public class WallLine {
 
         this.occupiedTiles = new boolean[tileTypes.size()]; 
     }
+
+    public void setLineUp(WallLine lineUp) {
+        this.lineUp = lineUp;
+    }
+
+    public void setLineDown(WallLine lineDown) {
+        this.lineDown = lineDown;
+    }
     
     Boolean canPutTile(Tile tile){
         if (tileTypes.contains(tile) && !occupiedTiles[tileTypes.indexOf(tile)]) {
