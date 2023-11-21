@@ -8,6 +8,7 @@ public final class UsedTiles implements UsedTilesGiveInterface, UsedTilesTakeInt
     }
 
     @Override
+
     public void give(Collection<Tile> newTiles) {
         for(Tile tile : newTiles) {
             if (tile != Tile.STARTING_PLAYER) tiles.add(tile);
