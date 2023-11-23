@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class WallLine {
+public class WallLine implements WallLineInterface {
     private ArrayList<Tile> tileTypes;
     private WallLine lineUp;
     private WallLine lineDown;
@@ -28,14 +28,14 @@ public class WallLine {
         this.lineDown = lineDown;
     }
     
-    Boolean canPutTile(Tile tile){
+    public boolean canPutTile(Tile tile){
         if (tileTypes.contains(tile) && !occupiedTiles[tileTypes.indexOf(tile)]) {
             return true;
         }
         return false;
     }
 
-    List<Optional<Tile>> getTiles(){
+    public ArrayList<Optional<Tile>> getTiles(){
         ArrayList<Optional<Tile>> tiles = new ArrayList<>();
         for (int i = 0; i < tileTypes.size(); i++) {
             if(occupiedTiles[i]){
@@ -48,7 +48,7 @@ public class WallLine {
         return tiles;
     }
 
-    Points putTile(Tile tile){
+    public Points putTile(Tile tile){
         if (canPutTile(tile)){
             int idx = tileTypes.indexOf(tile);
             this.occupiedTiles[idx] = true;
@@ -101,7 +101,7 @@ public class WallLine {
         return new Points(0);
     }
 
-    String state(){
+    public String state(){
         String toReturn = "";
         for (int i = 0; i < tileTypes.size(); i++) {
             if(occupiedTiles[i]){
