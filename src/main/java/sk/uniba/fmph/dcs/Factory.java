@@ -1,8 +1,7 @@
 package sk.uniba.fmph.dcs;
-
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
+
 
 public class Factory implements TyleSource {
     private static final int MAX_TILES = 4;

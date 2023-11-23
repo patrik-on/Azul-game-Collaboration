@@ -3,7 +3,7 @@ package sk.uniba.fmph.dcs;
 import java.util.*;
 
 public final class Bag implements BagInterface {
-    private List<Tile> tiles;
+    private final List<Tile> tiles;
     private final UsedTilesTakeInterface usedTiles;
 
     public Bag(final UsedTilesTakeInterface usedTiles) {
