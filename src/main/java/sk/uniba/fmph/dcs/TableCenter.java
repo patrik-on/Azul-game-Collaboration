@@ -2,7 +2,7 @@ package sk.uniba.fmph.dcs;
 
 import java.util.ArrayList;
 
-public class TableCenter implements TileSource{
+public class TableCenter implements TyleSource {
     private ArrayList<Tile> tiles;
     private boolean isFirst;
 

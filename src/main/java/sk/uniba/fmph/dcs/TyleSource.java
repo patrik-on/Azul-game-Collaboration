@@ -2,7 +2,7 @@ package sk.uniba.fmph.dcs;
 
 import java.util.ArrayList;
 
-public interface TileSource {
+public interface TyleSource {
     ArrayList<Tile> take (int idx);
     boolean isEmpty();
     void startNewRound();

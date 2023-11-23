@@ -19,7 +19,7 @@ class FakeBag implements BagInterface {
   }
 
   @Override
-  public ArrayList<Tile> take(int count) {
+  public List<Tile> take(int count) {
     ArrayList<Tile> takenTiles = new ArrayList<>();
     for (int i = 0; i < count; i++) {
       takenTiles.add(tiles.remove(0));
@@ -33,7 +33,7 @@ class FakeBag implements BagInterface {
   }
 }
 
-class FakeFactory implements TileSource{
+class FakeFactory implements TyleSource {
   FakeBag bag;
   TableCenter tableCenter;
   ArrayList<Tile> tiles;
@@ -84,7 +84,7 @@ class FakeFactory implements TileSource{
 
 public class TableAreaTest {
   private FakeBag bag;
-  private ArrayList<TileSource> tileSources;
+  private ArrayList<TyleSource> tyleSources;
   private int playerCount;
   private TableCenter tableCenter;
 
@@ -92,19 +92,19 @@ public class TableAreaTest {
   public void setUp() {
     playerCount = 4;
     bag = new FakeBag();
-    tileSources = new ArrayList<>();
+    tyleSources = new ArrayList<>();
     tableCenter = new TableCenter();
-    tileSources.add(tableCenter);
-    tileSources.add(new FakeFactory(tableCenter, bag));
+    tyleSources.add(tableCenter);
+    tyleSources.add(new FakeFactory(tableCenter, bag));
     for(int i = 0; i < playerCount; i++){
-      tileSources.add(new FakeFactory(tableCenter, bag));
-      tileSources.add(new FakeFactory(tableCenter, bag));
+      tyleSources.add(new FakeFactory(tableCenter, bag));
+      tyleSources.add(new FakeFactory(tableCenter, bag));
     }
   }
 
   @Test
   public void test_tableArea() {
-    TableArea tableArea = new TableArea(tileSources);
+    TableArea tableArea = new TableArea(tyleSources);
     tableArea.startNewRound();
     assertEquals("TablaArea Should take 4 RED Tiles.", new ArrayList<Tile>(List.of(Tile.RED, Tile.RED, Tile.RED, Tile.RED)), tableArea.take(1, 1));
 
