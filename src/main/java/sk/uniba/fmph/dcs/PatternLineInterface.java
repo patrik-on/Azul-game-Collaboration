@@ -1,7 +1,9 @@
 package sk.uniba.fmph.dcs;
-import java.util.Collection;
+
+import java.util.List;
+
 public interface PatternLineInterface {
-    void put(Collection<Tile> tiles);
+    void put(List<Tile> tiles);
     Points finishRound();
     String state();
 }

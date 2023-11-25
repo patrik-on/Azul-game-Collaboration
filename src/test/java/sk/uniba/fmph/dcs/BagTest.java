@@ -17,6 +17,14 @@ public class BagTest {
         usedTiles = new FakeUsedTilesBag();
         bag = new Bag(usedTiles);
     }
+    class FakeUsedTilesBag implements UsedTilesTakeInterface {
+        public ArrayList<Tile> tiles;
+        public FakeUsedTilesBag() {tiles = new ArrayList();}
+        @Override
+        public Collection<Tile> takeAll() {
+            return tiles;
+        }
+    }
 
     @Test
     public void testInitialBagState() {
@@ -32,7 +40,7 @@ public class BagTest {
         takenTiles.addAll(bag.take(5));
         takenTiles.addAll(bag.take(5));
         takenTiles.addAll(bag.take(6));
-        usedTiles.tile.addAll(takenTiles);
+        usedTiles.tiles.addAll(takenTiles);
 
         assertEquals("There should be 80 tiles left in bag.", 80, bag.state().length());
 

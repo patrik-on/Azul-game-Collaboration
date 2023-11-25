@@ -2,8 +2,6 @@ package sk.uniba.fmph.dcs;
 
 import org.junit.Before;
 import org.junit.Test;
-import sk.uniba.fmph.dcs.interfaces.PatternLineInterface;
-import sk.uniba.fmph.dcs.interfaces.WallLineInterface;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,8 +58,8 @@ class FakeWallLine implements WallLineInterface {
     }
 
     @Override
-    public List<Optional<Tile>> getTiles() {
-        return tiles;
+    public ArrayList<Optional<Tile>> getTiles() {
+        return (ArrayList<Optional<Tile>>) tiles;
     }
 
     @Override
@@ -151,5 +149,6 @@ public class BoardTest {
                 """;
         assertEquals(expectedState, board.state());
     }
+
 
 }

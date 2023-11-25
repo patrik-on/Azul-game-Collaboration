@@ -18,7 +18,7 @@ public class PatternLine implements PatternLineInterface {
     }
 
     @Override
-    public void put(Collection<Tile> tiles) {
+    public void put(List<Tile> tiles) {
         Tile firstTile = tiles.iterator().next();
         if (!wallLine.canPutTile(firstTile) || (!this.tiles.isEmpty() && !this.tiles.get(0).equals(firstTile))) {
             floor.put(tiles);

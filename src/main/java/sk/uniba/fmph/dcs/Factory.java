@@ -17,25 +17,32 @@ public class Factory implements TyleSource {
     }
 
     @Override
-    public ArrayList<Tile> take(int index) throws IllegalArgumentException {
+    public ArrayList<Tile> take(int index) {
         if (index < 0 || index >= tiles.size()) {
-            throw new IllegalArgumentException("Index out of bounds");
+            return null;
         }
 
-        Tile selectedColor = tiles.get(index);
-        ArrayList<Tile> pickedTiles = new ArrayList<>();
-        Iterator<Tile> iterator = tiles.iterator();
+        Tile chosenTile = tiles.get(index);
+        ArrayList<Tile> toReturn = new ArrayList<>();
+        ArrayList<Tile> toTableCenter = new ArrayList<>();
 
+        Iterator<Tile> iterator = tiles.iterator();
         while (iterator.hasNext()) {
             Tile tile = iterator.next();
-            if (tile == selectedColor) {
-                pickedTiles.add(tile);
+            if (tile.equals(chosenTile)) {
+                toReturn.add(tile);
                 iterator.remove();
+            } else {
+                toTableCenter.add(tile);
             }
         }
 
-        return pickedTiles;
+        tableCenter.add(toTableCenter);
+        return toReturn;
     }
+
+
+
 
 
 

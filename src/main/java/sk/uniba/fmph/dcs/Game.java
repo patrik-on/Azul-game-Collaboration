@@ -12,6 +12,8 @@ public class Game implements GameInterface{
 
     private GameObserver gameObserver;
 
+    private int startingPlayerId;
+
     private int curentPlayerId;
 
     public Game(int numberOfPlayers,ArrayList<Board> boards,TableArea tableArea,Bag bag,GameObserver gameObserver) {
@@ -29,17 +31,22 @@ public class Game implements GameInterface{
             return false;
         }
         ArrayList<Tile> tiles = tableArea.take(sourceId, idx);
+        if(tiles.contains(Tile.STARTING_PLAYER)){
+            startingPlayerId = playerId;
+        }
         if (tiles.size() == 0) {
             return false;
         }
         boards.get(playerId).put(destinationIdx, tiles);
         if (tableArea.isRoundEnd()) {
+            curentPlayerId = startingPlayerId;
             for (Board board : boards) {
                 FinishRoundResult result = board.finishRound();
                 if (result == GAME_FINISHED) {
                     for (Board board1 : boards) {
                         if (board1.finishRound() == GAME_FINISHED) {
                             gameObserver.notifyEverybody(GAME_OVER);
+
                             return false;
                         }
                     }
