@@ -17,7 +17,7 @@ public class BagTest {
         usedTiles = new FakeUsedTilesBag();
         bag = new Bag(usedTiles);
     }
-    class FakeUsedTilesBag implements UsedTilesTakeInterface {
+    static class FakeUsedTilesBag implements UsedTilesTakeInterface {
         public ArrayList<Tile> tiles;
         public FakeUsedTilesBag() {tiles = new ArrayList();}
         @Override

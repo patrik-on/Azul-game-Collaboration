@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import static sk.uniba.fmph.dcs.FinishRoundResult.GAME_FINISHED;
 
-public class Game implements GameInterface{
+public class Game implements GameInterface {
     public static final String GAME_OVER = "GAME_OVER";
     private TableArea tableArea;
     private Bag bag;
@@ -16,7 +16,7 @@ public class Game implements GameInterface{
 
     private int curentPlayerId;
 
-    public Game(int numberOfPlayers,ArrayList<Board> boards,TableArea tableArea,Bag bag,GameObserver gameObserver) {
+    public Game(int numberOfPlayers, ArrayList<Board> boards, TableArea tableArea, Bag bag, GameObserver gameObserver) {
         this.tableArea = tableArea;
         this.bag = bag;
         this.boards = boards;
@@ -31,12 +31,13 @@ public class Game implements GameInterface{
             return false;
         }
         ArrayList<Tile> tiles = tableArea.take(sourceId, idx);
-        if(tiles.contains(Tile.STARTING_PLAYER)){
+        if (tiles.contains(Tile.STARTING_PLAYER)) {
             startingPlayerId = playerId;
         }
         if (tiles.size() == 0) {
             return false;
         }
+
         boards.get(playerId).put(destinationIdx, tiles);
         if (tableArea.isRoundEnd()) {
             curentPlayerId = startingPlayerId;
@@ -47,15 +48,31 @@ public class Game implements GameInterface{
                         if (board1.finishRound() == GAME_FINISHED) {
                             gameObserver.notifyEverybody(GAME_OVER);
 
-                            return false;
+                            return finishGame();
                         }
                     }
 
+                } else {
+                    tableArea.startNewRound();
                 }
             }
         }
-        tableArea.startNewRound();
         curentPlayerId = (curentPlayerId + 1) % boards.size();
         return true;
     }
+    boolean finishGame(){
+        int maxPoints = 0;
+        int winnerId = 0;
+        for(int i = 0; i < boards.size(); i++){
+            int points = boards.get(i).getPoints().getValue();
+            gameObserver.notifyEverybody("Player " + i + " has " + points + " points");
+            if(points > maxPoints){
+                maxPoints = points;
+                winnerId = i;
+            }
+        }
+        gameObserver.notifyEverybody("Player " + winnerId + " won with " + maxPoints + " points");
+        return true;
+    }
+
 }

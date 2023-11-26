@@ -20,6 +20,7 @@ public class Board {
         this.wallLines = wallLines;
     }
 
+
     public void put(int destinationIndex, List<Tile> tiles) {
 
         if (destinationIndex == -1) {
