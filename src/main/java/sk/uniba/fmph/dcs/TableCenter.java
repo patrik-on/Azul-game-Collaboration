@@ -1,8 +1,9 @@
 package sk.uniba.fmph.dcs;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
-public class TableCenter implements TyleSource {
+public class TableCenter implements TyleSource, TableCenterInterface {
     private ArrayList<Tile> tiles;
     private boolean isFirst;
 
@@ -10,8 +11,8 @@ public class TableCenter implements TyleSource {
         tiles = new ArrayList<Tile>();
         isFirst = true;
     }
-
-    public void add(ArrayList<Tile> tiles) {
+    @Override
+    public void add(Collection<Tile> tiles) {
         this.tiles.addAll(tiles);
     }
 

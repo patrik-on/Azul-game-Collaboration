@@ -18,26 +18,25 @@ public class PatternLine implements PatternLineInterface {
     }
 
     @Override
-    public void put(List<Tile> tiles) {
-        Tile firstTile = tiles.iterator().next();
-        if (!wallLine.canPutTile(firstTile) || (!this.tiles.isEmpty() && !this.tiles.get(0).equals(firstTile))) {
-            floor.put(tiles);
+    public void put(List<Tile> incomingTiles) {
+        if (incomingTiles.isEmpty()) return;
+
+        Tile firstTile = incomingTiles.get(0);
+        if (!wallLine.canPutTile(firstTile) || (!this.tiles.isEmpty() && this.tiles.get(0) != firstTile)) {
+            floor.put(incomingTiles);
             return;
         }
 
-        List<Tile> fallingTiles = new ArrayList<>();
-        for (Tile tile : tiles) {
-            if (this.tiles.size() < capacity) {
-                this.tiles.add(tile);
-            } else {
-                fallingTiles.add(tile);
-            }
-        }
+        int spaceLeft = capacity - this.tiles.size();
+        int tilesToAdd = Math.min(spaceLeft, incomingTiles.size());
 
-        if (!fallingTiles.isEmpty()) {
-            floor.put(fallingTiles);
+        this.tiles.addAll(incomingTiles.subList(0, tilesToAdd));
+
+        if (tilesToAdd < incomingTiles.size()) {
+            floor.put(incomingTiles.subList(tilesToAdd, incomingTiles.size()));
         }
     }
+
 
     @Override
     public Points finishRound() {

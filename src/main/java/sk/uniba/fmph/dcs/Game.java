@@ -7,7 +7,7 @@ import static sk.uniba.fmph.dcs.FinishRoundResult.GAME_FINISHED;
 public class Game implements GameInterface {
     public static final String GAME_OVER = "GAME_OVER";
     private TableArea tableArea;
-    private Bag bag;
+    private BagInterface bag;
     private ArrayList<Board> boards;
 
     private GameObserver gameObserver;
@@ -16,7 +16,7 @@ public class Game implements GameInterface {
 
     private int curentPlayerId;
 
-    public Game(int numberOfPlayers, ArrayList<Board> boards, TableArea tableArea, Bag bag, GameObserver gameObserver) {
+    public Game(int numberOfPlayers, ArrayList<Board> boards, TableArea tableArea, BagInterface bag, GameObserver gameObserver) {
         this.tableArea = tableArea;
         this.bag = bag;
         this.boards = boards;
@@ -31,6 +31,10 @@ public class Game implements GameInterface {
             return false;
         }
         ArrayList<Tile> tiles = tableArea.take(sourceId, idx);
+        if (tiles == null) {
+            return false;
+        }
+
         if (tiles.contains(Tile.STARTING_PLAYER)) {
             startingPlayerId = playerId;
         }
@@ -74,5 +78,6 @@ public class Game implements GameInterface {
         gameObserver.notifyEverybody("Player " + winnerId + " won with " + maxPoints + " points");
         return true;
     }
+
 
 }

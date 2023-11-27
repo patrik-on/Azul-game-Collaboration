@@ -3,13 +3,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 
-public class Factory implements TyleSource {
+public class Factory implements TyleSource{
     private static final int MAX_TILES = 4;
     private final BagInterface bag;
-    private final TableCenterInterface tableCenter;
+    private final TableCenter tableCenter;
     private final ArrayList<Tile> tiles;
 
-    public Factory(BagInterface bag, TableCenterInterface tableCenter) {
+    public Factory(BagInterface bag, TableCenter tableCenter) {
         this.bag = bag;
         this.tableCenter = tableCenter;
         tiles = new ArrayList<>();
@@ -34,17 +34,14 @@ public class Factory implements TyleSource {
                 iterator.remove();
             } else {
                 toTableCenter.add(tile);
+                iterator.remove();
             }
         }
-
+        System.out.println("toReturn: " + toReturn);
+        System.out.println("toTableCenter: " + toTableCenter);
         tableCenter.add(toTableCenter);
         return toReturn;
     }
-
-
-
-
-
 
     @Override
     public boolean isEmpty() {

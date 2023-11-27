@@ -9,70 +9,76 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class BagTest {
-    private FakeUsedTilesBag usedTiles;
-    private Bag bag;
+    private MockUsedTiles mockUsedTiles;
+    private Bag Bag;
 
     @Before
-    public void setUp() {
-        usedTiles = new FakeUsedTilesBag();
-        bag = new Bag(usedTiles);
+    public void setupTestEnvironment() {
+        mockUsedTiles = new MockUsedTiles();
+        Bag = new Bag(mockUsedTiles);
     }
-    static class FakeUsedTilesBag implements UsedTilesTakeInterface {
-        public ArrayList<Tile> tiles;
-        public FakeUsedTilesBag() {tiles = new ArrayList();}
+
+    static class MockUsedTiles implements UsedTilesTakeInterface {
+        public ArrayList<Tile> usedTiles;
+
+        public MockUsedTiles() {
+            usedTiles = new ArrayList<>();
+        }
+
         @Override
         public Collection<Tile> takeAll() {
-            return tiles;
+            return usedTiles;
         }
     }
 
     @Test
-    public void testInitialBagState() {
-        assertEquals("Bag when created should contain 100 tiles.", 100, bag.state().length());
-        Map<String, Integer> tileCount = countTiles(bag.state());
-        tileCount.forEach((color, count) -> assertEquals("There should be 20 tiles of each color at the beginning.", 20, (int) count));
+    public void testBagInitialization() {
+        assertEquals("Bag should have 100 tiles initially.", 100, Bag.state().length());
+        Map<String, Integer> initialTileDistribution = countTilesInString(Bag.state());
+        initialTileDistribution.forEach((color, count) -> assertEquals("Each color should have 20 tiles initially.", 20, (int) count));
     }
 
     @Test
-    public void testTileTakingAndRefilling() {
-        List<Tile> takenTiles = new ArrayList<>();
-        takenTiles.addAll(bag.take(4));
-        takenTiles.addAll(bag.take(5));
-        takenTiles.addAll(bag.take(5));
-        takenTiles.addAll(bag.take(6));
-        usedTiles.tiles.addAll(takenTiles);
+    public void testTileRetrievalAndRefilling() {
+        List<Tile> tilesTaken = new ArrayList<>();
+        tilesTaken.addAll(Bag.take(5));
+        tilesTaken.addAll(Bag.take(5));
+        tilesTaken.addAll(Bag.take(5));
+        tilesTaken.addAll(Bag.take(10));
+        tilesTaken.addAll(Bag.take(10));
+        mockUsedTiles.usedTiles.addAll(tilesTaken);
 
-        assertEquals("There should be 80 tiles left in bag.", 80, bag.state().length());
+        assertEquals("Bag should have 65 tiles after taking some.", 65, Bag.state().length());
 
-        Map<Tile, Integer> takenTileCounts = countTakenTiles(takenTiles);
-        Map<String, Integer> remainingTileCounts = countTiles(bag.state());
+        Map<Tile, Integer> takenTileCounts = countTakenTiles(tilesTaken);
+        Map<String, Integer> remainingTileCounts = countTilesInString(Bag.state());
 
-        assertTrue("Take should not mess with the number of all tiles.", validateTotalTiles(takenTileCounts, remainingTileCounts));
+        assertTrue("Total number of tiles should remain constant.", validateTileTotals(takenTileCounts, remainingTileCounts));
 
-        bag.take(82); // Attempt to take more tiles than are available
-        assertEquals("If there are fewer tiles in the bag than requested, the bag will refill from UsedTiles.", 18, bag.state().length());
+        Bag.take(90); // Attempt to take more than available
+        assertEquals("Bag should refill from used tiles when emptied.", 10, Bag.state().length());
     }
 
-    private Map<String, Integer> countTiles(String state) {
+    private Map<String, Integer> countTilesInString(String tileString) {
         Map<String, Integer> tileCount = new HashMap<>();
-        for (String c : state.split("")) {
-            tileCount.put(c, tileCount.getOrDefault(c, 0) + 1);
+        for (String color : tileString.split("")) {
+            tileCount.put(color, tileCount.getOrDefault(color, 0) + 1);
         }
         return tileCount;
     }
 
     private Map<Tile, Integer> countTakenTiles(List<Tile> takenTiles) {
-        Map<Tile, Integer> count = new HashMap<>();
+        Map<Tile, Integer> tileCount = new HashMap<>();
         for (Tile tile : takenTiles) {
-            count.put(tile, count.getOrDefault(tile, 0) + 1);
+            tileCount.put(tile, tileCount.getOrDefault(tile, 0) + 1);
         }
-        return count;
+        return tileCount;
     }
 
-    private boolean validateTotalTiles(Map<Tile, Integer> taken, Map<String, Integer> remaining) {
+    private boolean validateTileTotals(Map<Tile, Integer> takenTiles, Map<String, Integer> remainingTiles) {
         for (Tile tile : List.of(Tile.RED, Tile.GREEN, Tile.BLUE, Tile.YELLOW, Tile.BLACK)) {
-            int takenCount = taken.getOrDefault(tile, 0);
-            int remainingCount = remaining.getOrDefault(tile.toString(), 0);
+            int takenCount = takenTiles.getOrDefault(tile, 0);
+            int remainingCount = remainingTiles.getOrDefault(tile.toString(), 0);
             if (takenCount + remainingCount != 20) {
                 return false;
             }

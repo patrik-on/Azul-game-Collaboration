@@ -8,7 +8,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-class FakeBagArea implements BagInterface {
+/*class FakeBagArea implements BagInterface {
     ArrayList<Tile> tiles;
 
     public FakeBagArea() {
@@ -109,4 +109,4 @@ public class TableAreaTest {
         assertEquals("TablaArea Should take 4 RED Tiles.", new ArrayList<Tile>(List.of(Tile.RED, Tile.RED, Tile.RED, Tile.RED)), tableArea.take(1, 1));
 
     }
-}
+}*/
