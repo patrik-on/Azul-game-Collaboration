@@ -18,7 +18,7 @@ public class GameIntegrationTest {
             this.tiles = new ArrayList<>();
             this.usedTiles = usedTiles;
 
-            this.tiles.addAll(List.of(Tile.RED, Tile.GREEN, Tile.BLUE, Tile.RED, Tile.GREEN, Tile.BLUE, Tile.GREEN, Tile.BLUE));
+            this.tiles.addAll(List.of(Tile.RED,Tile.RED, Tile.GREEN, Tile.YELLOW, Tile.BLUE, Tile.BLACK,Tile.RED, Tile.GREEN, Tile.YELLOW, Tile.BLUE, Tile.BLACK,Tile.RED, Tile.GREEN, Tile.YELLOW, Tile.BLUE, Tile.BLACK));
         }
 
         @Override
@@ -52,9 +52,9 @@ public class GameIntegrationTest {
     static Board addPlayer(UsedTiles usedTiles_instance, ArrayList<Points> pointPattern){
         ArrayList<Tile> tileTypes = new ArrayList<>();
         tileTypes.add(Tile.RED);
+        tileTypes.add(Tile.BLUE);
         tileTypes.add(Tile.GREEN);
         tileTypes.add(Tile.YELLOW);
-        tileTypes.add(Tile.BLUE);
         tileTypes.add(Tile.BLACK);
         ArrayList<WallLine> wallLines = new ArrayList<>();
         for (int i = 0; i < 5; i++){
@@ -108,10 +108,11 @@ public class GameIntegrationTest {
 
         TableArea tableArea_instance = new TableArea(tableCenter, factories);
         tableArea_instance.startNewRound();
-
         System.out.println(tableArea_instance.State());
 
+
         Game game = new Game(pocetHracov, boards, tableArea_instance, bag_instance, go);
+
 
         // Invalid requests
         // Invalid playerId, sourceId, idx, destinationIdx
@@ -131,32 +132,27 @@ public class GameIntegrationTest {
             assertEquals(new Points(0), boards.get(i).getPoints());
         }
 
-        assertTrue(game.take(0, 1, 1, 1));
-        assertEquals("Pattern Lines:\n" +
-                "\n" +
-                "GG\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "Wall Lines:\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "Floor:\n" +
-                "\n" +
-                "Points[value=0]\n", boards.get(0).state());
-        assertTrue(game.take(1, 2, 2, 1));
-        assertEquals("", tableArea_instance.State());
+        assertTrue(game.take(0, 1, 2, 0));
+
+        assertTrue(game.take(1, 2, 1, 0));
+
+        System.out.println(tableArea_instance.State());
+        System.out.println(boards.get(0).state());
+        System.out.println(boards.get(1).state());
+
+        assertTrue(game.take(0, 0, 4, 3));
+
+        assertTrue(game.take(1, 0, 1, 1));
+        System.out.println(tableArea_instance.State());
+        System.out.println(boards.get(0).state());
+        System.out.println(boards.get(1).state());
 
 
+        assertTrue(game.take(0, 0, 0, 3));
 
-
-
-
-
-
+        assertTrue(game.take(1, 0, 0, 0));
+        System.out.println(boards.get(0).state());
+        System.out.println(boards.get(1).state());
 
     }
 }

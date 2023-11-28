@@ -3,8 +3,8 @@ package sk.uniba.fmph.dcs;
 import java.util.List;
 import java.util.Optional;
 
-public class FinalPointsCalculation {
-    public static Points getPoints(List<List<Optional<Tile>>> wall){
+public class FinalPointsCalculation implements FinalPointsCalculationInterface {
+    public Points getPoints(List<List<Optional<Tile>>> wall){
         Horizontal horizontalLineRule = new Horizontal();
         Vertical verticalLineRule = new Vertical();
         Color fullColorRule = new Color();
