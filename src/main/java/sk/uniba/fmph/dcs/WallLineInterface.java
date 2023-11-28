@@ -1,8 +1,11 @@
 package sk.uniba.fmph.dcs;
-import java.util.*;
-public interface WallLineInterface {
+import java.util.List;
+import java.util.Optional;
+
+public interface WallLineInterface extends WallLinePutTileInterface {
     boolean canPutTile(Tile tile);
-    ArrayList<Optional<Tile>> getTiles();
+    List<Optional<Tile>> getTiles();
     Points putTile(Tile tile);
     String state();
+
 }

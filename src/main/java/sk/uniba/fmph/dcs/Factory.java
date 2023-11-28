@@ -1,15 +1,16 @@
 package sk.uniba.fmph.dcs;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 
-public class Factory implements TyleSource{
+public class Factory implements TileSourceInterface{
     private static final int MAX_TILES = 4;
     private final BagInterface bag;
-    private final TableCenter tableCenter;
+    private final TableCenterInterface tableCenter;
     private final ArrayList<Tile> tiles;
 
-    public Factory(BagInterface bag, TableCenter tableCenter) {
+    public Factory(BagInterface bag, TableCenterInterface tableCenter) {
         this.bag = bag;
         this.tableCenter = tableCenter;
         tiles = new ArrayList<>();
@@ -17,7 +18,7 @@ public class Factory implements TyleSource{
     }
 
     @Override
-    public ArrayList<Tile> take(int index) {
+    public List<Tile> take(int index) {
         if (index < 0 || index >= tiles.size()) {
             return null;
         }
@@ -55,7 +56,7 @@ public class Factory implements TyleSource{
     }
 
     @Override
-    public String State() {
+    public String state() {
         StringBuilder stringBuilder = new StringBuilder();
         for (Tile tile : tiles) {
             stringBuilder.append(tile.toString());

@@ -3,7 +3,7 @@ package sk.uniba.fmph.dcs;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public final class Floor implements FloorPutInterface{
+public final class Floor implements FloorInterface{
   private final UsedTilesGiveInterface usedTiles;
   private final ArrayList<Points> pointPattern;
   private ArrayList<Tile> tiles;
@@ -30,10 +30,10 @@ public final class Floor implements FloorPutInterface{
     int sum = 0;
     for (int i = 0; i < tiles.size(); i++) {
       sum +=
-          (i < pointPattern.size()
-                  ? pointPattern.get(i)
-                  : pointPattern.get(pointPattern.size() - 1))
-              .getValue();
+              (i < pointPattern.size()
+                      ? pointPattern.get(i)
+                      : new Points(0)) // pointPattern.get(pointPattern.size() - 1))
+                      .getValue();
     }
     usedTiles.give(tiles);
     tiles = new ArrayList<Tile>();

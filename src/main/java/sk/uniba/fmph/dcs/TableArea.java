@@ -1,58 +1,46 @@
 package sk.uniba.fmph.dcs;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class TableArea {
-    ArrayList<TyleSource> tyleSources;
+public class TableArea implements TableAreaInterface {
+    List<TileSourceInterface> tileSources;
 
-    public TableArea(TableCenter tb, ArrayList<Factory> factories) {
-        this.tyleSources = new ArrayList<>();
-        this.tyleSources.add(tb);
-        this.tyleSources.addAll(factories);
-
+    public TableArea(List tileSources) {
+        this.tileSources = tileSources;
     }
 
-    ArrayList<Tile> take(int sourceId, int idx) {
-        ArrayList<Tile> fin = new ArrayList<>();
-
-        //System.out.println(_tyleSources.size() + " _tylesource" );
-        if(sourceId < 0 || sourceId >= tyleSources.size()) {
-            return fin;
-        }
-        TyleSource tyleSource = tyleSources.get(sourceId);
-        if (tyleSource.isEmpty()) {
-            return fin;
-        }
-        if(idx < 0 || idx > 4) {
-            return fin;
-        }
-        for (Tile t : tyleSource.take(idx)) {
-            fin.add(t);
-        }
-        return fin;
+    @Override
+    public List<Tile> take(int sourceIdx, int idx) {
+        return tileSources.get(sourceIdx).take(idx);
     }
 
-    boolean isRoundEnd() {
-        for (TyleSource tyleSource : tyleSources) {
-            if (!tyleSource.isEmpty()) {
+    @Override
+    public boolean isRoundEnd() {
+        for (TileSourceInterface tileSource : tileSources) {
+            if (!tileSource.isEmpty()) {
                 return false;
             }
         }
         return true;
     }
 
-    void startNewRound() {
-        for (TyleSource tyleSource : tyleSources) {
-            tyleSource.startNewRound();
+    @Override
+    public void startNewRound() {
+        for (TileSourceInterface tileSource : tileSources) {
+            tileSource.startNewRound();
         }
     }
 
-    public String State() {
-        StringBuilder ans = new StringBuilder();
-        ans.append("TyleSources:\n");
-        for (TyleSource ts: this.tyleSources) {
-            ans.append(ts.State()).append("\n");
+    @Override
+    public String state() {
+        String toReturn = "";
+        int counter = 0;
+        for (final TileSourceInterface tileSource : tileSources) {
+            if (counter == 0) toReturn += "Table center: ";
+            else toReturn += "Factory " + counter + ": ";
+            toReturn += tileSource.state() + "\n";
+            counter++;
         }
-        return ans.toString();
+        return toReturn;
     }
 }

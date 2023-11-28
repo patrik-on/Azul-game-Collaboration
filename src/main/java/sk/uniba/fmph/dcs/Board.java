@@ -5,17 +5,17 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Board implements BoardInterface {
-    private final Floor floor;
+    private final FloorInterface floor;
     private final ArrayList<Points> points;
     private final List<PatternLineInterface> patternLines;
     private final List<WallLineInterface> wallLines;
     private final FinalPointsCalculationInterface finalPointsCalculation;
     private final GameFinishedInterface gameFinished;
 
-    public Board(Floor floor, ArrayList<Points> points, List<PatternLineInterface> patternLines, List<WallLineInterface> wallLines, FinalPointsCalculationInterface finalPointsCalculation, GameFinishedInterface gameFinishedInterface) {
+    public Board(FloorInterface floor, ArrayList<Points> points, List<PatternLineInterface> patternLines, List<WallLineInterface> wallLines, FinalPointsCalculationInterface finalPointsCalculation, GameFinishedInterface gameFinishedInterface) {
         this.finalPointsCalculation = finalPointsCalculation;
         this.gameFinished = gameFinishedInterface;
-        this.floor = floor;
+        this.floor =  floor;
         this.points = points;
         this.patternLines = patternLines;
         this.wallLines = wallLines;
@@ -107,4 +107,10 @@ public class Board implements BoardInterface {
     public Points getPoints(){
         return Points.sum(points);
     }
+
+    @Override
+    public boolean isGameOver() {
+        return gameFinished.equals(FinishRoundResult.GAME_FINISHED);
+    }
+
 }

@@ -11,4 +11,6 @@ public interface BoardInterface {
     void endGame();
     String state();
     Points getPoints();
+
+    boolean isGameOver();
 }

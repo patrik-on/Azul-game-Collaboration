@@ -1,9 +1,10 @@
 package sk.uniba.fmph.dcs;
 
-import java.util.ArrayList;
-import java.util.Collection;
 
-public class TableCenter implements TyleSource, TableCenterInterface {
+import java.util.ArrayList;
+import java.util.List;
+
+public class TableCenter implements TableCenterInterface {
     private ArrayList<Tile> tiles;
     private boolean isFirst;
 
@@ -11,8 +12,9 @@ public class TableCenter implements TyleSource, TableCenterInterface {
         tiles = new ArrayList<Tile>();
         isFirst = true;
     }
+
     @Override
-    public void add(Collection<Tile> tiles) {
+    public void add(List<Tile> tiles) {
         this.tiles.addAll(tiles);
     }
 
@@ -39,17 +41,17 @@ public class TableCenter implements TyleSource, TableCenterInterface {
 
     @Override
     public void startNewRound() {
-        tiles = new ArrayList<Tile>();
+        tiles = new ArrayList<>();
         isFirst = true;
         tiles.add(Tile.STARTING_PLAYER);
     }
 
     @Override
-    public String State() {
-        String toReturn = "";
+    public String state() {
+        StringBuilder toReturn = new StringBuilder();
         for (final Tile tile : tiles) {
-            toReturn += tile.toString();
+            toReturn.append(tile.toString());
         }
-        return toReturn;
+        return toReturn.toString();
     }
 }

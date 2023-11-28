@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 
-class MockFloor implements FloorPutInterface {
+class MockFloor implements FloorInterface {
     public ArrayList<Tile> floorTiles;
 
     public MockFloor() {
@@ -20,6 +20,20 @@ class MockFloor implements FloorPutInterface {
     @Override
     public void put(Collection<Tile> incomingTiles) {
         this.floorTiles.addAll(incomingTiles);
+    }
+
+    @Override
+    public String state() {
+        String toReturn = "";
+        for (final Tile tile : floorTiles) {
+            toReturn += tile.toString();
+        }
+        return toReturn;
+    }
+
+    @Override
+    public Points finishRound() {
+        return null;
     }
 }
 
@@ -44,6 +58,16 @@ class MockWallLine implements WallLineInterface {
     public Points putTile(Tile tile) {
         wallLineTiles.add(Optional.ofNullable(tile));
         return new Points(10);
+    }
+
+    @Override
+    public void setLineUp(WallLine wallLine) {
+
+    }
+
+    @Override
+    public void setLineDown(WallLine wallLine) {
+
     }
 
     @Override

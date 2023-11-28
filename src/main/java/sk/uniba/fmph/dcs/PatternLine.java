@@ -5,11 +5,11 @@ import java.util.*;
 public class PatternLine implements PatternLineInterface {
     private final int capacity;
     private final WallLineInterface wallLine;
-    private final FloorPutInterface floor;
+    private final FloorInterface floor;
     private final UsedTilesGiveInterface usedTiles;
     private List<Tile> tiles;
 
-    public PatternLine(int capacity, WallLineInterface wallLine, FloorPutInterface floor, UsedTilesGiveInterface usedTiles) {
+    public PatternLine(int capacity, WallLineInterface wallLine, FloorInterface floor, UsedTilesGiveInterface usedTiles) {
         this.capacity = capacity;
         this.wallLine = wallLine;
         this.floor = floor;

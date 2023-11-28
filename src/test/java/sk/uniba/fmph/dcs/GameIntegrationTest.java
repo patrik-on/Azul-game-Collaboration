@@ -1,158 +1,116 @@
 package sk.uniba.fmph.dcs;
 
+import org.junit.Before;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ArrayList;
+import org.junit.Before;
 import org.junit.Test;
-
-import java.util.*;
-
-import static org.junit.Assert.*;
-import static sk.uniba.fmph.dcs.Game.GAME_OVER;
-
+import java.util.Arrays;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 
 public class GameIntegrationTest {
+    private Game game;
+    private Bag bag;
+    private TableArea tableArea;
+    private List tileSources;
+    private GameObserver gameObserver;
+    private TableCenter tableCenter;
+    private int startingPlayerId;
+    ArrayList<BoardInterface> boards = new ArrayList<>();
 
-    public static class MockBag implements BagInterface {
-        private final List<Tile> tiles;
-        private final UsedTilesTakeInterface usedTiles;
+    @Before
+    public void setUp() {
+        int playerCount = 2;
+        List<PatternLineInterface> patternLines;
+        // set up used tiles and floor
+        ArrayList<Points> pointPattern = new ArrayList<>(Arrays.asList(new Points(-1), new Points(-1), new Points(-2), new Points(-2), new Points(-2), new Points(-3), new Points(-3)));
+        UsedTiles usedTiles = new UsedTiles();
+        Floor floor = new Floor(usedTiles, pointPattern);
 
-        public MockBag(final UsedTilesTakeInterface usedTiles) {
-            this.tiles = new ArrayList<>();
-            this.usedTiles = usedTiles;
+        // set up for player boards
+        // set up points pattern, floor and points
+        // create player boards
+        for (int i = 0; i < playerCount; i++) {
 
-            this.tiles.addAll(List.of(Tile.RED,Tile.RED, Tile.GREEN, Tile.YELLOW, Tile.BLUE, Tile.BLACK,Tile.RED, Tile.GREEN, Tile.YELLOW, Tile.BLUE, Tile.BLACK,Tile.RED, Tile.GREEN, Tile.YELLOW, Tile.BLUE, Tile.BLACK));
-        }
+            ArrayList<Points> points = new ArrayList<>();
+            List<WallLineInterface> wallLines = new ArrayList<>();
+            bag = new Bag(usedTiles);
 
-        @Override
-        public List<Tile> take(int count) {
-            List<Tile> toReturn = new ArrayList<>();
-            while (toReturn.size() < count) {
-                if (tiles.isEmpty()) {
-                    tiles.addAll(usedTiles.takeAll());
-                    Collections.shuffle(tiles);
-                }
-                if (!tiles.isEmpty()) {
-                    toReturn.add(tiles.remove(tiles.size() - 1));
-                } else {
-                    break; // No more tiles available
-                }
+            // set up tile types for wall lines
+            ArrayList<LinkedList<Tile>> tileTypesList = new ArrayList<>();
+            tileTypesList.add(new LinkedList<>(Arrays.asList(Tile.BLUE, Tile.YELLOW, Tile.RED, Tile.GREEN, Tile.BLACK)));
+            tileTypesList.add(new LinkedList<>(Arrays.asList(Tile.BLACK, Tile.BLUE, Tile.YELLOW, Tile.RED, Tile.GREEN)));
+            tileTypesList.add(new LinkedList<>(Arrays.asList(Tile.GREEN, Tile.BLACK, Tile.BLUE, Tile.YELLOW, Tile.RED)));
+            tileTypesList.add(new LinkedList<>(Arrays.asList(Tile.RED, Tile.GREEN, Tile.BLACK, Tile.BLUE, Tile.YELLOW)));
+            tileTypesList.add(new LinkedList<>(Arrays.asList(Tile.YELLOW, Tile.RED, Tile.GREEN, Tile.BLACK, Tile.BLUE)));
+
+            // create wall lines
+            for (int j = 0; j < 5; j++) {
+                wallLines.add(new WallLine(tileTypesList.get(j), null, null));
             }
-            return toReturn;
-        }
-
-        @Override
-        public String state() {
-            StringBuilder stringBuilder = new StringBuilder();
-            for (Tile tile : tiles) {
-                stringBuilder.append(tile.toString());
+            // set up wall lines connections up
+            for (int j = 0; j < 4; j++) {
+                wallLines.get(j).setLineUp((WallLine) wallLines.get(j + 1));
             }
-            return stringBuilder.toString();
+            // set up wall lines connections down
+            for (int j = 1; j < 5; j++) {
+                wallLines.get(j).setLineDown((WallLine) wallLines.get(j - 1));
+            }
+
+            // set up pattern lines
+            patternLines = new ArrayList<>();
+            for (int j = 0; j < 5; j++) {
+                patternLines.add(new PatternLine(j + 1, wallLines.get(j), floor, usedTiles));
+            }
+
+            // set up final points calculation and game finished
+            FinalPointsCalculation finalPointsCalculation = new FinalPointsCalculation();
+            GameFinished gameFinished = new GameFinished();
+
+            boards.add(new Board(floor, points, patternLines, wallLines, finalPointsCalculation, gameFinished));
         }
-    }
 
-
-    static Board addPlayer(UsedTiles usedTiles_instance, ArrayList<Points> pointPattern){
-        ArrayList<Tile> tileTypes = new ArrayList<>();
-        tileTypes.add(Tile.RED);
-        tileTypes.add(Tile.BLUE);
-        tileTypes.add(Tile.GREEN);
-        tileTypes.add(Tile.YELLOW);
-        tileTypes.add(Tile.BLACK);
-        ArrayList<WallLine> wallLines = new ArrayList<>();
-        for (int i = 0; i < 5; i++){
-            wallLines.add(new WallLine(tileTypes, null, null));
+        // set up table area
+        tableCenter = new TableCenter();
+        tileSources = new ArrayList<>();
+        tileSources.add(tableCenter);
+        tileSources.add(new Factory(bag,tableCenter));
+        for(int i = 0; i < playerCount; i++){
+            tileSources.add(new Factory(bag,tableCenter));
+            tileSources.add(new Factory(bag,tableCenter));
         }
+        tableArea = new TableArea(tileSources);
 
-        Floor floor_instance = new Floor(usedTiles_instance, pointPattern);
+        GameObserver gameObserver = new GameObserver();
+        ConsoleGameObserver consoleGameObserver = new ConsoleGameObserver();
+        gameObserver.registerObserver(consoleGameObserver);
 
-        ArrayList<PatternLine> patternLines = new ArrayList<>();
-        for (int i = 0; i < 5; i++){
-            patternLines.add(new PatternLine(i+1, wallLines.get(i), floor_instance, usedTiles_instance));
-
-        }
-        Board board = new Board(floor_instance, new Points(0), (List) patternLines, (List) wallLines);
-
-        return board;
+        // Set up the game with 2 players.
+        game = new Game(playerCount, boards, tableArea,bag,gameObserver);
+        // Starting player is chosen randomly.
     }
 
     @Test
-    public void test(){
+    public void testGameEndToEnd() {
 
-        GameObserver go = new GameObserver();
-
-        UsedTiles usedTiles_instance = new UsedTiles();
-        MockBag bag_instance = new MockBag(usedTiles_instance);
-        ArrayList<Points> pointPattern = new ArrayList<>();
-        pointPattern.add(new Points(1));
-        pointPattern.add(new Points(1));
-        pointPattern.add(new Points(2));
-        pointPattern.add(new Points(2));
-        pointPattern.add(new Points(2));
-        pointPattern.add(new Points(3));
-        pointPattern.add(new Points(3));
-        ArrayList<ObserverInterface> poz = new ArrayList<>();
-
-        int pocetHracov = 2;
-        ArrayList<Board> boards = new ArrayList<>();
-        for (int i = 0; i < pocetHracov; i++){
-            Board b = addPlayer(usedTiles_instance, pointPattern);
-            boards.add(b);
+        // Simulation of a game with 2 players. The players are not very smart :), that's why their scores are so low.
+        while(!game.isGameOver) {
+            for(int i = 5; i > 0 ; i--) {
+                game.take(game.getCurrentPlayerId(), i, 0, i-1);
+            }
+            while (!tableCenter.isEmpty()) {
+                game.take(game.getCurrentPlayerId(), 0, 0, 0);
+            }
         }
-
-        TableCenter tableCenter = new TableCenter();
-
-        ArrayList<Factory> factories = new ArrayList<>();
-        for (int i = 0; i < 2; i++){
-            Factory f = new Factory(bag_instance, tableCenter);
-            factories.add(f);
-        }
-
-
-        TableArea tableArea_instance = new TableArea(tableCenter, factories);
-        tableArea_instance.startNewRound();
-        System.out.println(tableArea_instance.State());
-
-
-        Game game = new Game(pocetHracov, boards, tableArea_instance, bag_instance, go);
-
-
-        // Invalid requests
-        // Invalid playerId, sourceId, idx, destinationIdx
-        assertFalse(game.take(-5, -8, -1, -1));
-
-        // Invalid playerId
-        assertFalse(game.take(28, 1, 1, 1));
-
-        // Invalid idx
-        assertFalse(game.take(0, 1, -1, 1));
-
-        // Invalid sourceId
-        assertFalse(game.take(0, 28, 1, 1));
-
-        //play
-        for (int i = 0; i < 2; i++){
-            assertEquals(new Points(0), boards.get(i).getPoints());
-        }
-
-        assertTrue(game.take(0, 1, 2, 0));
-
-        assertTrue(game.take(1, 2, 1, 0));
-
-        System.out.println(tableArea_instance.State());
-        System.out.println(boards.get(0).state());
-        System.out.println(boards.get(1).state());
-
-        assertTrue(game.take(0, 0, 4, 3));
-
-        assertTrue(game.take(1, 0, 1, 1));
-        System.out.println(tableArea_instance.State());
-        System.out.println(boards.get(0).state());
-        System.out.println(boards.get(1).state());
-
-
-        assertTrue(game.take(0, 0, 0, 3));
-
-        assertTrue(game.take(1, 0, 0, 0));
-        System.out.println(boards.get(0).state());
-        System.out.println(boards.get(1).state());
+        // The game is over, let's check the scores.
+        assertEquals(-14, boards.get(0).getPoints().getValue());
+        assertEquals(8, boards.get(1).getPoints().getValue());
 
     }
+
 }

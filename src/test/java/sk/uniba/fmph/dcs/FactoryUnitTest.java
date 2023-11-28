@@ -40,7 +40,7 @@ class MockBag implements BagInterface {
 class MockTableCenter extends TableCenter {
     public ArrayList<Tile> tileCollection = new ArrayList<>();
 
-    @Override
+
     public void add(Collection<Tile> incomingTiles) {
         this.tileCollection.addAll(incomingTiles);
     }
@@ -61,20 +61,20 @@ public class FactoryUnitTest {
 
     @Test
     public void validateFactoryOperations() {
-        assertEquals("Factory should initially contain MAX_NUMBER_OF_TILES (4).", 4, tileFactory.State().length());
-        assertEquals("Check initial state of factory.", "RGBR", tileFactory.State());
+        assertEquals("Factory should initially contain MAX_NUMBER_OF_TILES (4).", 4, tileFactory.state().length());
+        assertEquals("Check initial state of factory.", "RGBR", tileFactory.state());
         assertEquals("Invalid index should result in no action (null).", true, tileFactory.take(-1) == null && tileFactory.take(5) == null);
 
-        String currentState = tileFactory.State();
+        String currentState = tileFactory.state();
         tileFactory.take(-1);
-        assertEquals("State should remain unchanged after an invalid index.", currentState, tileFactory.State());
+        assertEquals("State should remain unchanged after an invalid index.", currentState, tileFactory.state());
         assertEquals("Factory should not be empty if state is not empty.", false, tileFactory.isEmpty());
 
-        ArrayList<Tile> extractedTiles = tileFactory.take(0);
+        List extractedTiles = tileFactory.take(0);
         assertEquals("Factory should be empty after take operation.", false, tileFactory.isEmpty());
 
         boolean uniformTileType = true;
-        for (Tile tile : extractedTiles)
+        for (Object tile : extractedTiles)
             if (tile != extractedTiles.get(0)) {
                 uniformTileType = false;
                 break;
