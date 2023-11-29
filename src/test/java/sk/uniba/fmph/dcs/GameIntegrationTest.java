@@ -27,21 +27,19 @@ public class GameIntegrationTest {
     public void setUp() {
         int playerCount = 2;
         List<PatternLineInterface> patternLines;
-        // set up used tiles and floor
+
         ArrayList<Points> pointPattern = new ArrayList<>(Arrays.asList(new Points(-1), new Points(-1), new Points(-2), new Points(-2), new Points(-2), new Points(-3), new Points(-3)));
         UsedTiles usedTiles = new UsedTiles();
 
 
-        // set up for player boards
-        // set up points pattern, floor and points
-        // create player boards
+
         for (int i = 0; i < playerCount; i++) {
             Floor floor = new Floor(usedTiles, pointPattern);
             ArrayList<Points> points = new ArrayList<>();
             List<WallLineInterface> wallLines = new ArrayList<>();
             bag = new Bag(usedTiles);
 
-            // set up tile types for wall lines
+
             ArrayList<LinkedList<Tile>> tileTypesList = new ArrayList<>();
             tileTypesList.add(new LinkedList<>(Arrays.asList(Tile.BLUE, Tile.YELLOW, Tile.RED, Tile.GREEN, Tile.BLACK)));
             tileTypesList.add(new LinkedList<>(Arrays.asList(Tile.BLACK, Tile.BLUE, Tile.YELLOW, Tile.RED, Tile.GREEN)));
@@ -49,33 +47,33 @@ public class GameIntegrationTest {
             tileTypesList.add(new LinkedList<>(Arrays.asList(Tile.RED, Tile.GREEN, Tile.BLACK, Tile.BLUE, Tile.YELLOW)));
             tileTypesList.add(new LinkedList<>(Arrays.asList(Tile.YELLOW, Tile.RED, Tile.GREEN, Tile.BLACK, Tile.BLUE)));
 
-            // create wall lines
+
             for (int j = 0; j < 5; j++) {
                 wallLines.add(new WallLine(tileTypesList.get(j), null, null));
             }
-            // set up wall lines connections up
+
             for (int j = 0; j < 4; j++) {
                 wallLines.get(j).setLineUp((WallLine) wallLines.get(j + 1));
             }
-            // set up wall lines connections down
+
             for (int j = 1; j < 5; j++) {
                 wallLines.get(j).setLineDown((WallLine) wallLines.get(j - 1));
             }
 
-            // set up pattern lines
+
             patternLines = new ArrayList<>();
             for (int j = 0; j < 5; j++) {
                 patternLines.add(new PatternLine(j + 1, wallLines.get(j), floor, usedTiles));
             }
 
-            // set up final points calculation and game finished
+
             FinalPointsCalculation finalPointsCalculation = new FinalPointsCalculation();
             GameFinished gameFinished = new GameFinished();
 
             boards.add(new Board(floor, points, patternLines, wallLines, finalPointsCalculation, gameFinished));
         }
 
-        // set up table area
+
         tableCenter = new TableCenter();
         tileSources = new ArrayList<>();
         tileSources.add(tableCenter);
@@ -90,9 +88,9 @@ public class GameIntegrationTest {
         ConsoleGameObserver consoleGameObserver = new ConsoleGameObserver();
         gameObserver.registerObserver(consoleGameObserver);
 
-        // Set up the game with 2 players.
+
         game = new Game(playerCount, boards, tableArea,bag,gameObserver);
-        // Starting player is chosen randomly.
+
     }
 
     @Test
@@ -103,22 +101,28 @@ public class GameIntegrationTest {
 
         game.take(game.getCurrentPlayerId(), 2, 0, 0);
         game.take(game.getCurrentPlayerId(), 4, 0, 0);
-        System.out.println("After taking from Factory 1 and 2: \n" + boards.get(0).state());
-        System.out.println("After taking from Factory 1 and 2: \n" + boards.get(1).state());
-        System.out.println("After taking from Factory 1 and 2: \n" + tableArea.state());
+
         game.take(game.getCurrentPlayerId(), 1, 0, 1);
         game.take(game.getCurrentPlayerId(), 3, 0, 1);
-        System.out.println("After taking from Factory 1 and 2: \n" + boards.get(0).state());
-        System.out.println("After taking from Factory 1 and 2: \n" + boards.get(1).state());
-        System.out.println("After taking from Factory 1 and 2: \n" + tableArea.state());
+
         game.take(game.getCurrentPlayerId(), 5, 2, 2);
-        game.take(game.getCurrentPlayerId(), 0, 3, 2);
+        game.take(game.getCurrentPlayerId(), 0, 4, 2);
+
+        game.take(game.getCurrentPlayerId(), 0, 0, 3);
+        game.take(game.getCurrentPlayerId(), 0, 3, 3);
+
+        game.take(game.getCurrentPlayerId(), 0, 0, 4);
+        game.take(game.getCurrentPlayerId(), 0, 0, 4);
+
+        assertEquals(2, boards.get(0).getPoints().getValue());
+        assertEquals(4, boards.get(1).getPoints().getValue());
+
         System.out.println("After taking from Factory 1 and 2: \n" + boards.get(0).state());
         System.out.println("After taking from Factory 1 and 2: \n" + boards.get(1).state());
         System.out.println("After taking from Factory 1 and 2: \n" + tableArea.state());
 
-        // Simulation of a game with 2 players. The players are not very smart :), that's why their scores are so low.
-        /*
+
+
         while(!game.isGameOver) {
             for(int i = 5; i > 0 ; i--) {
                 game.take(game.getCurrentPlayerId(), i, 0, i-1);
@@ -127,8 +131,8 @@ public class GameIntegrationTest {
                 game.take(game.getCurrentPlayerId(), 0, 0, 0);
             }
         }
-        // The game is over, let's check the scores.
-        assertEquals(4, boards.get(0).getPoints().getValue());
-        assertEquals(13, boards.get(1).getPoints().getValue());*/
+
+        assertEquals(0, boards.get(0).getPoints().getValue());
+        assertEquals(4, boards.get(1).getPoints().getValue());
     }
 }

@@ -51,21 +51,21 @@ public class Game implements GameInterface {
         boards.get(playerId).put(destinationIdx, tiles);
         if (tableArea.isRoundEnd()) {
             curentPlayerId = startingPlayerId;
+            FinishRoundResult result = FinishRoundResult.NORMAL;
             for (BoardInterface board : boards) {
-                FinishRoundResult result = board.finishRound();
-                if (result == GAME_FINISHED) {
-                    for (BoardInterface board1 : boards) {
-                        if (board1.finishRound() == GAME_FINISHED) {
-                            gameObserver.notifyEverybody(GAME_OVER);
-                            isGameOver = true;
-                            return finishGame();
-                        }
-                    }
-
-                } else {
-                    tableArea.startNewRound();
-                }
+                result = board.finishRound();
             }
+            if ( result == GAME_FINISHED) {
+                for (BoardInterface board1 : boards) {
+                    board1.endGame();
+                }
+                gameObserver.notifyEverybody(GAME_OVER);
+                isGameOver = true;
+                return finishGame();
+            } else {
+                tableArea.startNewRound();
+            }
+
         }
         curentPlayerId = (curentPlayerId + 1) % boards.size();
         return true;

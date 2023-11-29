@@ -51,7 +51,6 @@ public class Factory implements TileSourceInterface{
     @Override
     public void startNewRound() {
         tiles.addAll(bag.take(MAX_TILES));
-
     }
 
     @Override
