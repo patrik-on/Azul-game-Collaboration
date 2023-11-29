@@ -8,18 +8,18 @@ import static sk.uniba.fmph.dcs.FinishRoundResult.GAME_FINISHED;
 public class Game implements GameInterface {
     public static final String GAME_OVER = "GAME_OVER";
     public boolean isGameOver = false;
-    private TableArea tableArea;
+    private TableAreaInterface tableArea;
     private BagInterface bag;
     private ArrayList<BoardInterface> boards;
 
-    private GameObserver gameObserver;
+    private ObserverInterface gameObserver;
     private int seed;
 
     private int startingPlayerId;
 
     private int curentPlayerId;
 
-    public Game(int numberOfPlayers, ArrayList<BoardInterface> boards, TableArea tableArea, BagInterface bag, GameObserver gameObserver) {
+    public Game(int numberOfPlayers, ArrayList<BoardInterface> boards, TableAreaInterface tableArea, BagInterface bag, ObserverInterface gameObserver) {
         this.tableArea = tableArea;
         this.bag = bag;
         this.boards = boards;
@@ -59,7 +59,7 @@ public class Game implements GameInterface {
                 for (BoardInterface board1 : boards) {
                     board1.endGame();
                 }
-                gameObserver.notifyEverybody(GAME_OVER);
+                gameObserver.notify(GAME_OVER);
                 isGameOver = true;
                 return finishGame();
             } else {
@@ -81,13 +81,13 @@ public class Game implements GameInterface {
         int winnerId = 0;
         for(int i = 0; i < boards.size(); i++){
             int points = boards.get(i).getPoints().getValue();
-            gameObserver.notifyEverybody("Player " + i + " has " + points + " points");
+            gameObserver.notify("Player " + i + " has " + points + " points");
             if(points > maxPoints){
                 maxPoints = points;
                 winnerId = i;
             }
         }
-        gameObserver.notifyEverybody("Player " + winnerId + " won with " + maxPoints + " points");
+        gameObserver.notify("Player " + winnerId + " won with " + maxPoints + " points");
         return true;
     }
 

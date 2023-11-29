@@ -84,7 +84,7 @@ public class GameIntegrationTest {
         }
         tableArea = new TableArea(tileSources);
 
-        GameObserver gameObserver = new GameObserver();
+        this.gameObserver = new GameObserver();
         ConsoleGameObserver consoleGameObserver = new ConsoleGameObserver();
         gameObserver.registerObserver(consoleGameObserver);
 
