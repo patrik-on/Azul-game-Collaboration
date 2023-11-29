@@ -168,7 +168,7 @@ class FakeObserver implements ObserverInterface {
     }
 }
 
-public class GameTest {
+public class GameTestSolitary {
 
     Game game;
     TableAreaInterface tableArea;
