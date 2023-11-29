@@ -1,8 +1,5 @@
 package sk.uniba.fmph.dcs;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -10,6 +7,8 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 class MockBag implements BagInterface {
     private ArrayList<Tile> tilePool;
@@ -37,12 +36,33 @@ class MockBag implements BagInterface {
     }
 }
 
-class MockTableCenter extends TableCenter {
+class MockTableCenter implements TableCenterInterface {
     public ArrayList<Tile> tileCollection = new ArrayList<>();
 
 
-    public void add(Collection<Tile> incomingTiles) {
-        this.tileCollection.addAll(incomingTiles);
+    @Override
+    public void add(List<Tile> tiles) {
+        tileCollection.addAll(tiles);
+    }
+
+    @Override
+    public List<Tile> take(int idx) {
+        return null;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public void startNewRound() {
+
+    }
+
+    @Override
+    public String state() {
+        return null;
     }
 }
 
@@ -61,17 +81,18 @@ public class FactoryUnitTest {
 
     @Test
     public void validateFactoryOperations() {
+        tileFactory.startNewRound();
         assertEquals("Factory should initially contain MAX_NUMBER_OF_TILES (4).", 4, tileFactory.state().length());
         assertEquals("Check initial state of factory.", "RGBR", tileFactory.state());
-        assertEquals("Invalid index should result in no action (null).", true, tileFactory.take(-1) == null && tileFactory.take(5) == null);
+        assertTrue("Invalid index should result in no action (null).", tileFactory.take(-1) == null && tileFactory.take(5) == null);
 
         String currentState = tileFactory.state();
         tileFactory.take(-1);
         assertEquals("State should remain unchanged after an invalid index.", currentState, tileFactory.state());
-        assertEquals("Factory should not be empty if state is not empty.", false, tileFactory.isEmpty());
+        assertFalse("Factory should not be empty if state is not empty.", tileFactory.isEmpty());
 
         List extractedTiles = tileFactory.take(0);
-        assertEquals("Factory should be empty after take operation.", false, tileFactory.isEmpty());
+        assertTrue("Factory should be empty after take operation.", tileFactory.isEmpty());
 
         boolean uniformTileType = true;
         for (Object tile : extractedTiles)
@@ -80,15 +101,16 @@ public class FactoryUnitTest {
                 break;
             }
 
-        assertEquals("All tiles from take() should be of the same type.", true, uniformTileType);
+        assertTrue("All tiles from take() should be of the same type.", uniformTileType);
 
         String tableCenterState = "";
         for (Tile tile : centerArea.tileCollection) {
+            System.out.println(tile.toString());
             tableCenterState += tile.toString();
         }
         assertEquals("Remaining tiles should be in TableCenter.", "GB", tableCenterState);
 
         tileFactory.startNewRound();
-        assertEquals("Factory should be refilled with new tiles after startNewRound().", false, tileFactory.isEmpty());
+        assertFalse("Factory should be refilled with new tiles after startNewRound().", tileFactory.isEmpty());
     }
 }

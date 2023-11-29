@@ -14,7 +14,6 @@ public class Factory implements TileSourceInterface{
         this.bag = bag;
         this.tableCenter = tableCenter;
         tiles = new ArrayList<>();
-        startNewRound();
     }
 
     @Override

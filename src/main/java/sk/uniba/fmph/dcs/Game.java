@@ -1,5 +1,5 @@
 package sk.uniba.fmph.dcs;
-
+import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +13,7 @@ public class Game implements GameInterface {
     private ArrayList<BoardInterface> boards;
 
     private GameObserver gameObserver;
+    private int seed;
 
     private int startingPlayerId;
 
@@ -23,7 +24,10 @@ public class Game implements GameInterface {
         this.bag = bag;
         this.boards = boards;
         this.gameObserver = gameObserver;
-        curentPlayerId = 0;
+        seed = 0;
+        Random random = new Random(seed);
+        startingPlayerId = random.nextInt(numberOfPlayers);
+        curentPlayerId = startingPlayerId;
     }
 
 

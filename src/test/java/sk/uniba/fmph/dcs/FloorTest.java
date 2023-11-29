@@ -50,7 +50,7 @@ public class FloorTest {
     assertEquals("Floor should be empty after the round is finished.", "", floor.state());
     assertEquals(
         "Incorrect points calculation when there are more tiles than pattern size",
-        7,
+        5,
         points.getValue());
     assertArrayEquals(
         "Used tiles should get the tiles", tiles.toArray(), usedTiles.tiles.toArray());

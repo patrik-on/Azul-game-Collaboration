@@ -5,11 +5,13 @@ import java.util.*;
 public final class Bag implements BagInterface {
     private final List<Tile> tiles;
     private final UsedTilesTakeInterface usedTiles;
+    private final int randomSeed ;
 
     public Bag(final UsedTilesTakeInterface usedTiles) {
         this.tiles = new ArrayList<>();
         this.usedTiles = usedTiles;
         initializeTiles();
+        this.randomSeed = 0;
     }
 
     private void initializeTiles() {
@@ -18,7 +20,7 @@ public final class Bag implements BagInterface {
                 tiles.add(tile);
             }
         }
-        Collections.shuffle(tiles);
+        Collections.shuffle(tiles, new Random(randomSeed));
     }
 
     @Override
@@ -27,7 +29,7 @@ public final class Bag implements BagInterface {
         while (toReturn.size() < count) {
             if (tiles.isEmpty()) {
                 tiles.addAll(usedTiles.takeAll());
-                Collections.shuffle(tiles);
+                Collections.shuffle(tiles, new Random(randomSeed));
             }
             if (!tiles.isEmpty()) {
                 toReturn.add(tiles.remove(tiles.size() - 1));
